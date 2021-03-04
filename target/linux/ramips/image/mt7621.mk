@@ -732,8 +732,8 @@ define Device/linksys_e5600
   IMAGE_SIZE := 26624k
   DEVICE_VENDOR := Linksys
   DEVICE_MODEL := E5600
-  DEVICE_PACKAGES := kmod-usb3 kmod-mt7603 kmod-mt7615e \
-  kmod-mt7615-firmware uboot-envtools
+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7615-firmware \
+  uboot-envtools
   UBINIZE_OPTS := -E 5
   IMAGES := sysupgrade.bin factory.bin
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata | check-size

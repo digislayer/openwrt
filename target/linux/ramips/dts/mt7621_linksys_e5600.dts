@@ -175,3 +175,7 @@
 		};
 	};
 };
+
+&xhci {
+	status = "disabled";
+};

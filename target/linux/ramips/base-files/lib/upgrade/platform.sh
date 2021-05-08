@@ -57,6 +57,7 @@ platform_do_upgrade() {
 		;;
 	hc5962|\
 	r6220|\
+	linksys,e5600|\
 	netgear,r6350|\
 	ubnt-erx|\
 	ubnt-erx-sfp|\

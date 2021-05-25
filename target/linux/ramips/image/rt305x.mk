@@ -472,7 +472,7 @@ define Device/dlink_dwr-512-b
   DEVICE_VENDOR := D-Link
   DEVICE_MODEL := DWR-512
   DEVICE_VARIANT := B
-  DEVICE_PACKAGES := jboot-tools kmod-usb2 kmod-spi-dev kmod-usb-serial \
+  DEVICE_PACKAGES := jboot-tools kmod-usb2 kmod-spi-dev \
 	kmod-usb-serial-option kmod-usb-net-cdc-ether comgt-ncm
   DLINK_ROM_ID := DLK6E2412001
   DLINK_FAMILY_MEMBER := 0x6E24
@@ -1184,6 +1184,7 @@ endef
 TARGET_DEVICES += zorlik_zl5900v2
 
 define Device/zte_mf283plus
+  $(Device/uimage-lzma-loader)
   SOC := rt3352
   IMAGE_SIZE := 15872k
   DEVICE_VENDOR := ZTE
@@ -1206,6 +1207,7 @@ endef
 TARGET_DEVICES += zyxel_keenetic
 
 define Device/zyxel_keenetic-lite-b
+  $(Device/uimage-lzma-loader)
   SOC := rt5350
   IMAGE_SIZE := 7872k
   DEVICE_VENDOR := ZyXEL

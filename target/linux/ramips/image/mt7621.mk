@@ -83,6 +83,13 @@ define Build/ubnt-erx-factory-image
 	fi
 endef
 
+define Build/zytrx-header
+	$(eval board=$(word 1,$(1)))
+	$(eval version=$(word 2,$(1)))
+	$(STAGING_DIR_HOST)/bin/zytrx -B '$(board)' -v '$(version)' -i $@ -o $@.new
+	mv $@.new $@
+endef
+
 define Device/dsa-migration
   DEVICE_COMPAT_VERSION := 1.1
   DEVICE_COMPAT_MESSAGE := Config cannot be migrated from swconfig to DSA
@@ -463,6 +470,14 @@ define Device/elecom_wrc-1750gs
   ELECOM_HWNAME := WRC-1750GS
 endef
 TARGET_DEVICES += elecom_wrc-1750gs
+
+define Device/elecom_wrc-1750gst2
+  $(Device/elecom_wrc-gs)
+  IMAGE_SIZE := 24576k
+  DEVICE_MODEL := WRC-1750GST2
+  ELECOM_HWNAME := WRC-1750GST2
+endef
+TARGET_DEVICES += elecom_wrc-1750gst2
 
 define Device/elecom_wrc-1750gsv
   $(Device/elecom_wrc-gs)
@@ -860,6 +875,7 @@ TARGET_DEVICES += mikrotik_routerboard-m33g
 
 define Device/mqmaker_witi
   $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
   IMAGE_SIZE := 16064k
   DEVICE_VENDOR := MQmaker
   DEVICE_MODEL := WiTi
@@ -871,6 +887,7 @@ TARGET_DEVICES += mqmaker_witi
 
 define Device/mtc_wr1201
   $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
   IMAGE_SIZE := 16000k
   DEVICE_VENDOR := MTC
   DEVICE_MODEL := Wireless Router WR1201
@@ -1216,6 +1233,7 @@ define Device/ubnt_unifi-6-lite
   $(Device/dsa-migration)
   DEVICE_VENDOR := Ubiquiti
   DEVICE_MODEL := UniFi 6 Lite
+  DEVICE_DTS_CONFIG := config@1
   DEVICE_PACKAGES += kmod-mt7603 kmod-mt7915e
   KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
   IMAGE_SIZE := 15424k
@@ -1515,6 +1533,21 @@ define Device/zio_freezio
 	kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += zio_freezio
+
+define Device/zyxel_nr7101
+  $(Device/dsa-migration)
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  UBINIZE_OPTS := -E 5
+  DEVICE_VENDOR := ZyXEL
+  DEVICE_MODEL := NR7101
+  DEVICE_PACKAGES := kmod-mt7603 kmod-usb3 uboot-envtools kmod-usb-net-qmi-wwan kmod-usb-serial-option uqmi
+  KERNEL := $(KERNEL_DTB) | uImage lzma | zytrx-header $$(DEVICE_MODEL) $$(VERSION_DIST)-$$(REVISION)
+  KERNEL_INITRAMFS := $(KERNEL_DTB) | uImage lzma | zytrx-header $$(DEVICE_MODEL) 9.99(ABUV.9)$$(VERSION_DIST)-recovery
+  KERNEL_INITRAMFS_SUFFIX := -recovery.bin
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += zyxel_nr7101
 
 define Device/zyxel_wap6805
   $(Device/dsa-migration)
